@@ -1,52 +1,24 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[2]:
+# In[67]:
 
 
 import numpy as np
 import pandas as pd
-import pylab
-import math
-import seaborn as sns
-
-import matplotlib 
 import matplotlib.pyplot as plt
-import matplotlib.image as mpimg
-
 import plotly.graph_objects as go
-import plotly.express as px
 import plotly.offline as py
-import plotly.graph_objs as go 
-import chart_studio.plotly as py
-
-import radioactivedecay as rd
-
-from matplotlib import cm
-from matplotlib.ticker import LinearLocator, FormatStrFormatter
-from matplotlib import pyplot as plt
-from matplotlib.legend_handler import HandlerLine2D
-
-from IPython.display import display, HTML
-from numpy import random
-
-get_ipython().run_line_magic('matplotlib', 'inline')
 
 from PIL import Image
-from IPython.display import Image
-
-from plotly.offline import download_plotlyjs,init_notebook_mode,plot,iplot
-init_notebook_mode(connected=True)
-from plotly.subplots import make_subplots
-
 from scipy.integrate import odeint
-from sympy import*
-init_printing()
+
+get_ipython().run_line_magic('matplotlib', 'inline')
 
 
 # ## Data Collected
 
-# In[3]:
+# In[68]:
 
 
 # Here we load the data that we need to make the numerical simulator.
@@ -69,14 +41,14 @@ IsotopesHalfLives = HLDC[["Isotopes","Half Lives (sec)"]]
 
 # ## Thresholds
 
-# In[4]:
+# In[69]:
 
 
 # Since we are only intersted in decays longer than 1.0*10^-3 sec and less than 3600 sec
 # we need to apply two thresholds
 
 
-# In[5]:
+# In[70]:
 
 
 # Threshold 1
@@ -113,7 +85,7 @@ def CutDecayChain(BranchingRatiosData, HalfLivesDatSet, Th1):
     
 
 
-# In[6]:
+# In[71]:
 
 
 # Here we apply threshold 1 to update our data and later apply threshold 2.
@@ -121,14 +93,14 @@ def CutDecayChain(BranchingRatiosData, HalfLivesDatSet, Th1):
 BranchingRatiosData = CutDecayChain(BranchingRatiosData, IsotopesHalfLives, 3600)
 
 
-# In[7]:
+# In[72]:
 
 
 # Threshold 2 iterates through the data and skips short lived isotopes for a certain threshold
 # To do this three functions were made, 
 
 
-# In[8]:
+# In[73]:
 
 
 # Function one: iterates through the data once skipping shortived isotopes
@@ -287,7 +259,7 @@ def SkipShortLivedIsotopes(FatherDaughterRelation, IsotopesHalfLives, Threshold)
     return FatherDaughterRelation
 
 
-# In[9]:
+# In[74]:
 
 
 # Function 2 will determine how many times we'll have to iterate through the data and apply function 1
@@ -321,7 +293,7 @@ def DaughtersToBeSkiped(FatherDaughterRelation, IsotopesHalfLives, Threshold):
     return Length
 
 
-# In[10]:
+# In[75]:
 
 
 # Function 3 makes use of the previous two functions to update the entire data and obtain the desired form.
@@ -343,7 +315,7 @@ def ApplyThreshold2(FatherDaughterRelation, IsotopesHalfLives, Threshold):
     return Updated
 
 
-# In[11]:
+# In[76]:
 
 
 # To make sure that our functons work properly when we use them,
@@ -369,17 +341,17 @@ BranchingRatiosData=Data3.rename(columns={"F":"Fission Products","D":"Daughter N
 # # Decay chains
 # 
 
-# In[13]:
+# In[77]:
 
 
 #Using a pivot table allows us to relate the barnching ratios of every single isiotope with one another
 
 pivottable=BranchingRatiosData.pivot_table(values='Branching Ratios',index='Daughter Nuclides',columns='Fission Products').fillna(0)
 
-pivottable
+#pivottable
 
 
-# In[24]:
+# In[78]:
 
 
 # We also need to consider de deacy constant of the isotopes and include them in trhe pivot table.
@@ -398,10 +370,10 @@ result = [[var[j][i] for j in range(len(var))] for i in range(len(var[0]))]
 
 Matrix=np.array(result)
 
-Matrix
+#Matrix
 
 
-# In[22]:
+# In[79]:
 
 
 # The following lists contain important data that we will use
@@ -426,7 +398,7 @@ for i in ISOIDs:
     ID.append(j)
 
 
-# In[26]:
+# In[80]:
 
 
 # This is the data that we will use , it takes into account the branching ratios and decay constants of the isotpes. 
@@ -435,7 +407,7 @@ FinalMatrix=Matrix*DecayConstantVals
 FinalMatrix
 
 
-# In[27]:
+# In[81]:
 
 
 # This piece of code sets the system of diff eqs and uses odeint to solve them.
@@ -448,7 +420,7 @@ t = np.linspace(0,3600,5000)
 MA = odeint(deriv, FYVals, t, args=(FinalMatrix,))
 
 
-# In[28]:
+# In[82]:
 
 
 # This fucntions allows us to plot the time evolution of the fission products by indicating the ID of the isotope
@@ -488,21 +460,27 @@ def TimeEvolve(x):
         print("I don't know that sotope")
 
 
-# In[39]:
+# In[83]:
 
 
-Isotpe = '56-142'
+Isotope = '56-124'
 
-TimeEvolve(Isotpe)
-
-
-# In[ ]:
-
-
-
+TimeEvolve(Isotope)
 
 
 # In[ ]:
+
+
+
+
+
+# In[66]:
+
+
+
+
+
+# In[46]:
 
 
 
